@@ -145,6 +145,10 @@ class Subdivision(pycountry.db.Data):
         super(Subdivision, self).__init__(**kw)
         self.country_code = self.code.split('-')[0]
         if self.parent_code is not None:
+            # Avoid duplicate country code assignment if the parent code
+            # already starts with `{country_code}-`
+            if self.parent_code.startswith(self.country_code + '-'):
+                return
             self.parent_code = '%s-%s' % (self.country_code, self.parent_code)
 
     @property
